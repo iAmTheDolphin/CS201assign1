@@ -91,12 +91,29 @@ DLL *newDLL(void (*d)(void *, FILE *), void (*f)(void *)) {
     return items;
 }
 
+/*
+//getting the node before the index passed in is an arifact from
+//when I wrote SLL and brought it over. while it is not the most
+//logical solution to this problem, strictly speaking, it is the
+//solution that had already been implemented in the code, thus I
+//considered it dangerous to change since almost every method
+//was already accounting for recieving the node before the index
+ */
 static NODE *getNodeBefore(DLL *items, int index) {
-    NODE *n = items->head;
-    for (int x = 1; x < index; x++) {
-        n = getNODEnext(n);
+    if(index <= items->size / 2) {
+        NODE *n = items->head;
+        for (int x = 1; x < index; x++) {
+            n = getNODEnext(n);
+        }
+        return n;
     }
-    return n;
+    else { //allows access to the end of the list in constant time
+        NODE *n = items->tail;
+        for (int x = items->size -1; x > index-1; x--) {
+            n = getNODElast(n);
+        }
+        return n;
+    }
 }
 
 void insertDLL(DLL *items, int index, void *value) {
