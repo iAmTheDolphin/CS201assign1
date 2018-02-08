@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include "bst.h"
+#include "integer.h"
 
 /* options */
 int Special = 0;    /* option -s      */
@@ -11,9 +13,19 @@ char* Name = 0;     /* option -N YYYY */
 static int processOptions(int,char **);
 void Fatal(char *,...);
 
+
 int
 main(int argc,char **argv)
 {
+
+    BST *t = newBST(displayINTEGER, compareINTEGER, NULL ,freeINTEGER);
+
+    insertBST(t, newINTEGER(1));
+    insertBST(t, newINTEGER(2));
+    insertBST(t, newINTEGER(3));
+    displayBST(t, stdout);
+
+    /*
     int argIndex;
 
     if (argc == 1) Fatal("%d arguments!\n",argc-1);
@@ -34,7 +46,8 @@ main(int argc,char **argv)
             printf("    %s\n",argv[i]);
     }
 
-    return 0;
+    return 0;*/
+
 }
 
 void

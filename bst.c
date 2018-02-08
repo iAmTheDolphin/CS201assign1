@@ -78,15 +78,9 @@ struct bst {
 };
 
 static void backupSwapperBST(BSTNODE *n1, BSTNODE *n2) {
-    BSTNODE *left1 = n1->left;
-    BSTNODE *right1 = n1->right;
-    BSTNODE *parent1 = n1->parent;
-    n1->parent = n2->parent;
-    n1->left = n2->left;
-    n1->right = n2->right;
-    n2->parent = parent1;
-    n2->left = left1;
-    n2->right = right1;
+    void *data1 = getBSTNODEvalue(n1);
+    setBSTNODEvalue(n1, getBSTNODEvalue(n2));
+    setBSTNODEvalue(n2, data1);
 }
 
 BST *newBST(
@@ -96,23 +90,18 @@ BST *newBST(
         void (*free)(void *)) {
 
     BST *tree = malloc(sizeof(BST));
-
     assert(tree != 0);
-
     tree->free = free;
     tree->comparator = compatator;
     tree->display = display;
-
     if(swapper != 0) {
         tree->swapper = swapper;
     }
     else {
         tree->swapper = backupSwapperBST;
     }
-
     tree->root = 0;
     tree->size = 0;
-
     return tree;
 }
 
@@ -128,10 +117,42 @@ void setBSTsize(BST *t,int s) {
     t->size = s; //FIXME - WHY IS THIS HERE?
 }
 
+static BSTNODE *insertHelper(BST *t, BSTNODE *n, void *value) {
+    BSTNODE *n2;
+    if (t->comparator(getBSTNODEvalue(n), value) <= 0) { //value is bigger or equal
+        if(getBSTNODEright(n)){
+            n2 = insertHelper(t, getBSTNODEright(n), value);
+        }
+        else {
+            n2 = newBSTNODE(value);
+            setBSTNODEright(n, n2);
+        }
+    }
+    else { //value is less than
+        if(getBSTNODEleft(n)) {
+            n2 = insertHelper(t, getBSTNODEleft(n), value);
+        }
+        else {
+            n2 = newBSTNODE(value);
+            setBSTNODEleft(n, n2);
+        }
+    }
+    return n2;
+}
 
-/*BSTNODE *insertBST (BST *t, void *value) {
+BSTNODE *insertBST (BST *t, void *value) {
+    BSTNODE *newN;
+    if(t->root == 0) {
+        newN = newBSTNODE(value);
+        setBSTroot(t, newN);
+    }
+    else {
+        newN = insertHelper(t, t->root, value);
+    }
+    t->size ++;
+    return newN;
+}
 
-}*/
 
 void pruneLeafBST(BST *t,BSTNODE *leaf) {
     BSTNODE *parent = getBSTNODEparent(leaf);
@@ -153,4 +174,27 @@ void statisticsBST(BST *t,FILE *fp) {
     printf("Nodes: %d\n", t->size);
     printf("Minimum depth: %d", t->size);
 
+}
+
+
+void displayHelper(BST *t, BSTNODE *n, FILE *fp) {
+    printf("[");
+    t->display(getBSTNODEvalue(n),fp);
+    if(getBSTNODEleft(n)) {
+        printf(" ");
+        displayHelper(t, getBSTNODEleft(n), fp);
+    }
+    if(getBSTNODEright(n)) {
+        printf(" ");
+        displayHelper(t, getBSTNODEright(n), fp);
+    }
+    printf("]");
+}
+void displayBST(BST *t,FILE *fp) {
+    if(t->size == 0) {
+        printf("[]");
+    }
+    else {
+        displayHelper(t, t->root, fp);
+    }
 }
