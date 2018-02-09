@@ -20,10 +20,20 @@ main(int argc,char **argv)
 
     BST *t = newBST(displayINTEGER, compareINTEGER, NULL ,freeINTEGER);
 
-    insertBST(t, newINTEGER(1));
+    insertBST(t, newINTEGER(6));
+
     insertBST(t, newINTEGER(2));
     insertBST(t, newINTEGER(3));
+    insertBST(t, newINTEGER(7));
+    insertBST(t, newINTEGER(4));
+    insertBST(t, newINTEGER(1));
+    insertBST(t, newINTEGER(8));
     displayBST(t, stdout);
+    printf("\n");
+    displayBSTdebug(t, stdout);
+
+    freeBST(t);
+    return 0;
 
     /*
     int argIndex;
