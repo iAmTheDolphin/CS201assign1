@@ -4,6 +4,8 @@
 #include <assert.h>
 #include "integer.h"
 
+int debugINTEGER = 0;
+
 struct INTEGER {
     int value;
 };
@@ -35,6 +37,7 @@ displayINTEGER(void *v, FILE *fp) {
 
 int
 compareINTEGER(void *v, void *w) {
+    if(debugINTEGER)printf("Comparing %d - %d = %d\n", getINTEGER(v), getINTEGER(w), getINTEGER(v) - getINTEGER(w));
     return getINTEGER(v) - getINTEGER(w);
 }
 

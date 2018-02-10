@@ -27,9 +27,22 @@ main(int argc,char **argv)
     insertBST(t, newINTEGER(7));
     insertBST(t, newINTEGER(4));
     insertBST(t, newINTEGER(1));
-    insertBST(t, newINTEGER(8));
+
+    INTEGER *val = newINTEGER(8);
+
+    insertBST(t, val);
     displayBST(t, stdout);
     printf("\n");
+    displayBSTdebug(t, stdout);
+
+    printf("\n");
+
+    BSTNODE *foundNode = findBST(t, val);
+
+    printf("\n");
+
+    pruneLeafBST(t, foundNode);
+
     displayBSTdebug(t, stdout);
 
     freeBST(t);
