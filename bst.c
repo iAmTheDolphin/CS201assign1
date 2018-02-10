@@ -31,7 +31,6 @@ void *getBSTNODEvalue(BSTNODE *n) {
 }
 
 void setBSTNODEvalue(BSTNODE *n,void *value) {
-    free(n->value); //TODO check back in on this.
     n->value = value;
 }
 
@@ -40,7 +39,7 @@ BSTNODE *getBSTNODEleft(BSTNODE *n) {
 }
 
 void setBSTNODEleft(BSTNODE *n,BSTNODE *replacement) {
-    n->left = replacement; //TODO - check back in on this for mem leaks
+    n->left = replacement;
 }
 
 BSTNODE *getBSTNODEright(BSTNODE *n) {
@@ -48,7 +47,7 @@ BSTNODE *getBSTNODEright(BSTNODE *n) {
 }
 
 void setBSTNODEright(BSTNODE *n,BSTNODE *replacement) {
-    n->right = replacement; //TODO - check back in on this for mem leaks
+    n->right = replacement;
 }
 
 BSTNODE *getBSTNODEparent(BSTNODE *n) {
@@ -96,7 +95,7 @@ The constructor is passed four functions, one that knows how to display the gene
 */
 BST *newBST(
         void (*display)(void *,FILE *),           //display
-        int (*compatator)(void *,void *),            //comparator
+        int (*compatator)(void *,void *),         //comparator
         void (*swapper)(BSTNODE *,BSTNODE *),     //swapper
         void (*free)(void *)) {
 
@@ -134,6 +133,35 @@ static int isLeftChild(BSTNODE *leaf) {
     return 0;
 }
 
+static BSTNODE *successorHelper (BSTNODE *n) {
+    if(getBSTNODEleft(n)) {
+        return successorHelper(n->left);
+    }
+    else {
+        return n;
+    }
+}
+
+static BSTNODE *predecessorHelper (BSTNODE *n) {
+    if(getBSTNODEright(n)) {
+        return predecessorHelper(n->right);
+    }
+    else {
+        return n;
+    }
+}
+
+static BSTNODE *findNodeToSwap(BSTNODE *n) {
+    if(getBSTNODEright(n)) {
+        return successorHelper(n->right);
+    }
+    else if (getBSTNODEleft(n)) {
+        return predecessorHelper(n->left);
+    }
+    else {
+        return 0;
+    }
+}
 
 
 
@@ -190,6 +218,14 @@ void setBSTsize(BST *t,int s) {
     t->size = s; //FIXME - WHY IS THIS HERE?
 }
 
+BSTNODE *swapToLeafBST(BST *t,BSTNODE *n) {
+    BSTNODE *swapNode = findNodeToSwap(n);
+    if(swapNode) {
+        t->swapper(n, swapNode);
+        return swapNode;
+    }
+    return n;
+}
 
 
 
@@ -263,6 +299,18 @@ void pruneLeafBST(BST *t,BSTNODE *leaf) {
         t->root = 0;
         t->size--;
     }
+}
+
+BSTNODE *deleteBST(BST *t,void *value) {
+    BSTNODE *n = findBST(t, value);
+
+    if(n) {
+        swapToLeafBST(t, n);
+        pruneLeafBST(t, n);
+        return n;
+    }
+
+    return 0;
 }
 
 
