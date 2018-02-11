@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include "bst.h"
+#include "heap.h"
 #include "integer.h"
 
 /* options */
@@ -17,34 +18,19 @@ void Fatal(char *,...);
 int
 main(int argc,char **argv)
 {
+    HEAP *h = newHEAP(displayINTEGER, compareINTEGER, freeINTEGER);
 
-    BST *t = newBST(displayINTEGER, compareINTEGER, NULL ,freeINTEGER);
+    insertHEAP(h, newINTEGER(5));
+    insertHEAP(h, newINTEGER(1));
+    insertHEAP(h, newINTEGER(4));
+    insertHEAP(h, newINTEGER(9));
+    displayHEAP(h, stdout);
 
-    INTEGER *val = newINTEGER(6);
-    insertBST(t, val);
+    freeHEAP(h);
 
-    insertBST(t, newINTEGER(2));
-    insertBST(t, newINTEGER(3));
-    insertBST(t, newINTEGER(7));
-    insertBST(t, newINTEGER(4));
-    insertBST(t, newINTEGER(1));
 
-    displayBSTdebug(t, stdout);
 
-    //deleteBST(t, val);
-    val = newINTEGER(2);
 
-    BSTNODE *n = findBST(t, val);
-    swapToLeafBST(t, n);
-
-    displayBST(t, stdout);
-
-    displayBSTdebug(t, stdout);
-    printf("\n");
-
-    statisticsBST(t, stdout);
-
-    freeBST(t);
     return 0;
 
     /*

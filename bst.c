@@ -28,7 +28,8 @@ BSTNODE *newBSTNODE(void *value) {
 }
 
 void *getBSTNODEvalue(BSTNODE *n) {
-    return n->value;
+    if(n) return n->value;
+    else return 0;
 }
 
 void setBSTNODEvalue(BSTNODE *n,void *value) {
@@ -36,7 +37,8 @@ void setBSTNODEvalue(BSTNODE *n,void *value) {
 }
 
 BSTNODE *getBSTNODEleft(BSTNODE *n) {
-    return n->left;
+    if(n)return n->left;
+    else return 0;
 }
 
 void setBSTNODEleft(BSTNODE *n,BSTNODE *replacement) {
@@ -44,7 +46,8 @@ void setBSTNODEleft(BSTNODE *n,BSTNODE *replacement) {
 }
 
 BSTNODE *getBSTNODEright(BSTNODE *n) {
-    return n->right;
+    if(n) return n->right;
+    else return 0;
 }
 
 void setBSTNODEright(BSTNODE *n,BSTNODE *replacement) {
@@ -308,9 +311,13 @@ void pruneLeafBST(BST *t,BSTNODE *leaf) {
 
 BSTNODE *deleteBST(BST *t,void *value) {
     BSTNODE *n = findBST(t, value);
-
     if(n) {
-        swapToLeafBST(t, n);
+        if(debugBST) {
+            printf("deleting: ");
+            t->display(getBSTNODEvalue(n), stdout);
+            printf("\n");
+        }
+        n = swapToLeafBST(t, n);
         pruneLeafBST(t, n);
         //pruneLeafBST already decrements the size so we dont have to do that here
         return n;
@@ -339,12 +346,11 @@ static void displayHelper(BST *t, BSTNODE *n, FILE *fp) {
 
 void displayBST(BST *t,FILE *fp) {
     if(t->size == 0) {
-        printf("[]");
+        printf("[empty]");
     }
     else {
         displayHelper(t, t->root, fp);
     }
-    printf("\n");
 }
 
 void displayBSTdebug(BST *t,FILE *fp) {
@@ -376,6 +382,7 @@ void displayBSTdebug(BST *t,FILE *fp) {
         nodes = sizeQUEUE(items);
         printf("\n");
     }
+    freeQUEUE(items);
 }
 
 int max = -1;
@@ -403,11 +410,11 @@ void statisticsBST(BST *t,FILE *fp) {
     (void) fp;
     printf("Nodes: %d\n", t->size);
     if(t->size == 0) {
-        printf("Minimum depth: -1\nMaximum depth: -1");
+        printf("Minimum depth: -1\nMaximum depth: -1\n");
     }
     else {
         statsHelper(t->root, 0);
-        printf("Minimum depth: %d\nMaximum depth: %d", min, max);
+        printf("Minimum depth: %d\nMaximum depth: %d\n", min, max);
     }
 }
 
