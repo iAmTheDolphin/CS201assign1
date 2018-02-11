@@ -25,12 +25,12 @@ extern BST *newBST(
         void (*)(void *));                 //free
 extern BSTNODE *getBSTroot(BST *t);
 extern void    setBSTroot(BST *t,BSTNODE *replacement);
-extern void    setBSTsize(BST *t,int s);       //lets the heap reset the size
-extern BSTNODE *insertBST(BST *t,void *value); //heap will never use this
+extern void    setBSTsize(BST *t,int s);
+extern BSTNODE *insertBST(BST *t,void *value);
 extern BSTNODE *findBST(BST *t,void *value);
-extern BSTNODE *deleteBST(BST *t,void *value); //will never use this
+extern BSTNODE *deleteBST(BST *t,void *value);
 extern BSTNODE *swapToLeafBST(BST *t,BSTNODE *node);
-extern void    pruneLeafBST(BST *t,BSTNODE *leaf); //heap will use this to prune rightmost leaf
+extern void    pruneLeafBST(BST *t,BSTNODE *leaf);
 extern int     sizeBST(BST *t);
 extern void    statisticsBST(BST *t,FILE *fp);
 extern void    displayBST(BST *t,FILE *fp);

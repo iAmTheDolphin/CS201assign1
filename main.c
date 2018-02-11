@@ -20,7 +20,8 @@ main(int argc,char **argv)
 
     BST *t = newBST(displayINTEGER, compareINTEGER, NULL ,freeINTEGER);
 
-    insertBST(t, newINTEGER(6));
+    INTEGER *val = newINTEGER(6);
+    insertBST(t, val);
 
     insertBST(t, newINTEGER(2));
     insertBST(t, newINTEGER(3));
@@ -28,22 +29,20 @@ main(int argc,char **argv)
     insertBST(t, newINTEGER(4));
     insertBST(t, newINTEGER(1));
 
-    INTEGER *val = newINTEGER(8);
+    displayBSTdebug(t, stdout);
 
-    insertBST(t, val);
+    //deleteBST(t, val);
+    val = newINTEGER(2);
+
+    BSTNODE *n = findBST(t, val);
+    swapToLeafBST(t, n);
+
     displayBST(t, stdout);
-    printf("\n");
-    displayBSTdebug(t, stdout);
-
-    printf("\n");
-
-    BSTNODE *foundNode = findBST(t, val);
-
-    printf("\n");
-
-    pruneLeafBST(t, foundNode);
 
     displayBSTdebug(t, stdout);
+    printf("\n");
+
+    statisticsBST(t, stdout);
 
     freeBST(t);
     return 0;

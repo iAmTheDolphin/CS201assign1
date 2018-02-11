@@ -22,6 +22,7 @@ HEAP *newHEAP(
         void (*free)(void *)) {
 
     HEAP *h = malloc(sizeof(HEAP));
+    assert(h != 0);
     h->parents = newQUEUE(display, free);
     h->tree = newBST(display, compare, NULL, free);
 
@@ -31,5 +32,7 @@ HEAP *newHEAP(
 
     return h;
 }
+
+
 
 

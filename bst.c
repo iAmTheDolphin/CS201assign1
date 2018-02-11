@@ -19,6 +19,7 @@ struct bstnode {
 
 BSTNODE *newBSTNODE(void *value) {
     BSTNODE *n = malloc(sizeof(BSTNODE));
+    assert(n != 0);
     n->value = value;
     n->parent = 0;
     n->left = 0;
@@ -119,6 +120,11 @@ BST *newBST(
 
 /*        utilities        */
 
+static int isLeaf(BSTNODE *n) {
+    if (getBSTNODEright(n) || getBSTNODEleft(n)) return 0;
+    return 1;
+}
+
 static int isRightChild(BSTNODE *leaf) {
     if (getBSTNODEright(leaf->parent) == leaf) {
         return 1;
@@ -178,8 +184,6 @@ int sizeBST(BST *t) {
 }
 
 BSTNODE *findBSThelper (BST *t, BSTNODE *n, void *value) {
-    t->display(getBSTNODEvalue(n), stdout);
-    printf("\n");
     if(t->comparator(getBSTNODEvalue(n), value) == 0) {
         return n;
     }
@@ -222,6 +226,7 @@ BSTNODE *swapToLeafBST(BST *t,BSTNODE *n) {
     BSTNODE *swapNode = findNodeToSwap(n);
     if(swapNode) {
         t->swapper(n, swapNode);
+        if(!isLeaf(swapNode)) return swapToLeafBST(t, swapNode);
         return swapNode;
     }
     return n;
@@ -307,6 +312,7 @@ BSTNODE *deleteBST(BST *t,void *value) {
     if(n) {
         swapToLeafBST(t, n);
         pruneLeafBST(t, n);
+        //pruneLeafBST already decrements the size so we dont have to do that here
         return n;
     }
 
@@ -354,7 +360,7 @@ void displayBSTdebug(BST *t,FILE *fp) {
         while(nodes > 0) {
             //pulls out the next node to work with
             n = peekQUEUE(items);
-            t->display(getBSTNODEvalue(n), stdout);
+            t->display(getBSTNODEvalue(n), fp);
             //dequeues the node just displayed
             dequeue(items);
             //if there is a left BSTNODE to the current node we enqueue it
@@ -369,6 +375,39 @@ void displayBSTdebug(BST *t,FILE *fp) {
         //set nodes to the amount of nodes in the next level.
         nodes = sizeQUEUE(items);
         printf("\n");
+    }
+}
+
+int max = -1;
+int min = -1;
+
+static void statsHelper(BSTNODE *n, int depth) {
+    if(!getBSTNODEleft(n) || !getBSTNODEright(n)) {
+        if(min == -1) {
+            min = depth;
+        }
+        else {
+            if(depth < min) {
+                min = depth;
+            }
+        }
+        if(depth > max) {
+            max = depth;
+        }
+    }
+    if(getBSTNODEleft(n)) statsHelper(getBSTNODEleft(n), depth + 1);
+    if(getBSTNODEright(n)) statsHelper(getBSTNODEright(n), depth + 1);
+}
+
+void statisticsBST(BST *t,FILE *fp) {
+    (void) fp;
+    printf("Nodes: %d\n", t->size);
+    if(t->size == 0) {
+        printf("Minimum depth: -1\nMaximum depth: -1");
+    }
+    else {
+        statsHelper(t->root, 0);
+        printf("Minimum depth: %d\nMaximum depth: %d", min, max);
     }
 }
 
