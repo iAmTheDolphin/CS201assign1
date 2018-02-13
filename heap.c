@@ -7,7 +7,7 @@
 #include "bst.h"
 
 
-int debugHEAP = 1;
+int debugHEAP = 0;
 
 struct heap {
     void (*display)(void *, FILE *);
@@ -21,6 +21,7 @@ struct heap {
     QUEUE *parents;
     STACK *interior;
     int size;
+    STACK *lastAdded;
 
 };
 
@@ -34,6 +35,7 @@ HEAP *newHEAP(
     assert(h != 0);
     h->parents = newQUEUE(0, 0);
     h->interior = newSTACK(0, 0);
+    h->lastAdded = newSTACK(0,0);
     h->tree = newBST(display, compare, NULL, free);
 
     h->display = display;
@@ -56,16 +58,16 @@ void insertHEAP(HEAP *h, void *value) {
         setBSTNODEparent(n, parent);
         if (!getBSTNODEleft(parent)) {
             setBSTNODEleft(parent, n);
-            if (debugHEAP) printf("pushing %d\n", getBSTNODEvalue(parent));
             push(h->interior, parent);
         } else {
             setBSTNODEright(parent, n);
         }
     }
     h->size++;
-    setBSTsize(h->tree, 1);
+    setBSTsize(h->tree, h->size);
     enqueue(h->parents, n);
     enqueue(h->parents, n);
+    push(h->lastAdded, n);
 }
 
 
@@ -96,6 +98,7 @@ void freeHEAP(HEAP *h) {
     freeBST(h->tree);
     freeQUEUE(h->parents);
     freeSTACK(h->interior);
+    freeSTACK(h->lastAdded);
     free(h);
 }
 
@@ -105,8 +108,6 @@ void swap(BSTNODE *n1, BSTNODE *n2) {
     setBSTNODEvalue(n1, getBSTNODEvalue(n2));
     setBSTNODEvalue(n2, data);
 }
-
-
 
 
 
@@ -162,5 +163,22 @@ void buildHEAP(HEAP *h) {
         }
         heapify(h, pop(h->interior));
     }
+
+}
+
+
+
+
+/*        extract        */
+
+void *extractHEAP(HEAP *h) {
+    BSTNODE *n = pop(h->lastAdded);
+    BSTNODE *root = getBSTroot(h->tree);
+    void *data = getBSTNODEvalue(root);
+    swap(n, root);
+    //setBSTroot(h->tree, n);
+    pruneLeafBST(h->tree, n);
+    heapify(h, getBSTroot(h->tree));
+    return data;
 
 }

@@ -20,14 +20,21 @@ main(int argc,char **argv)
 {
     HEAP *h = newHEAP(displayINTEGER, compareINTEGER, freeINTEGER);
 
-    insertHEAP(h, newINTEGER(9));
+    insertHEAP(h, newINTEGER(12));
+    insertHEAP(h, newINTEGER(56));
+    insertHEAP(h, newINTEGER(128));
+    insertHEAP(h, newINTEGER(3));
+    insertHEAP(h, newINTEGER(16));
+    insertHEAP(h, newINTEGER(4));
+    insertHEAP(h, newINTEGER(4));
     insertHEAP(h, newINTEGER(6));
-    insertHEAP(h, newINTEGER(5));
+    insertHEAP(h, newINTEGER(100));
+    insertHEAP(h, newINTEGER(87));
+    insertHEAP(h, newINTEGER(14));
     insertHEAP(h, newINTEGER(0));
     insertHEAP(h, newINTEGER(8));
     insertHEAP(h, newINTEGER(2));
     insertHEAP(h, newINTEGER(1));
-    insertHEAP(h, newINTEGER(3));
     displayHEAP(h, stdout);
     printf("\n");
     displayHEAPdebug(h, stdout);
@@ -36,6 +43,14 @@ main(int argc,char **argv)
     printf("\nBuilding heap...\n");
     buildHEAP(h);
     printf("done building heap...\n");
+
+    displayHEAP(h, stdout);
+    printf("\n");
+    displayHEAPdebug(h, stdout);
+    printf("\n");
+
+    extractHEAP(h);
+    extractHEAP(h);
 
     displayHEAP(h, stdout);
     printf("\n");

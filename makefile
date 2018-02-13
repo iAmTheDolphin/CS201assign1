@@ -1,4 +1,4 @@
-OBJS = bst.o main.o integer.o heap.o queue.o sll.o
+OBJS = bst.o main.o integer.o heap.o queue.o sll.o stack.o dll.o
 OOPTS = -Wall -Wextra -g -c
 LOPTS = -Wall -Wextra -g
 
@@ -19,8 +19,14 @@ bst.o : bst.c bst.h
 main.o :	main.c integer.h
 		gcc $(OOPTS) main.c
 
-heap.o : heap.c heap.h queue.o
+heap.o : heap.c heap.h queue.o stack.o
 		gcc $(OOPTS) heap.c
+
+stack.o : stack.c stack.h dll.o
+		gcc $(OOPTS) stack.c
+
+dll.o : dll.c dll.h
+		gcc $(OOPTS) dll.c
 
 test : main
 		./main
