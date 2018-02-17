@@ -69,18 +69,23 @@ main(int argc,char **argv)
     void (*free)(void *);
 
     if(Reals) { //it is a file of reals
+        if(debugMAIN) printf("Heaping Reals\n");
         if(Increasing) h = newHEAP(displayREAL, compareREALmin, freeREAL);
         else  h = newHEAP(displayREAL, compareREALmax, freeREAL);
         double temp = readReal(fp);
         while(!feof(fp)) {
+            if(debugMAIN) printf("adding : %f\n", temp);
             insertHEAP(h, newREAL(temp));
             temp = readReal(fp);
         }
+        if(debugMAIN) printf("adding : %f\n", temp);
+        insertHEAP(h, newREAL(temp));
         buildHEAP(h);
         display = displayREAL;
         free = freeREAL;
     }
     else if(Strings) { //it is a file of strings
+        if(debugMAIN) printf("Heaping strings\n");
         if(Increasing) h = newHEAP(displaySTRING, compareSTRINGmin, freeSTRING);
         else h = newHEAP(displaySTRING, compareSTRINGmax, freeSTRING);
         char *temp;
@@ -91,6 +96,7 @@ main(int argc,char **argv)
             temp = readToken(fp);
         }
         while(!feof(fp)) {
+            if(debugMAIN) printf("adding : %s\n", temp);
             insertHEAP(h, newSTRING(temp));
             if(stringPending(fp)) {
                 temp = readString(fp);
@@ -99,18 +105,25 @@ main(int argc,char **argv)
                 temp = readToken(fp);
             }
         }
+        if(debugMAIN) printf("adding : %s\n", temp);
+        insertHEAP(h, newSTRING(temp));
+        if(debugMAIN) printf("items loaded. building heap...\n");
         buildHEAP(h);
         display = displaySTRING;
         free = freeSTRING;
     }
     else { //it is an integer file
+        if(debugMAIN) printf("no string or real options passed. Heaping Integers\n");
         if(Increasing) h = newHEAP(displayINTEGER, compareINTEGERmin, freeINTEGER);
         else h = newHEAP(displayINTEGER, compareINTEGERmax, freeINTEGER);
         int temp = readInt(fp);
         while (!feof(fp)) {
+            if(debugMAIN) printf("adding : %d\n", temp);
             insertHEAP(h, newINTEGER(temp));
             temp = readInt(fp);
         }
+        if(debugMAIN) printf("adding : %d\n", temp);
+        insertHEAP(h, newINTEGER(temp));
         buildHEAP(h);
         display = displayINTEGER;
         free = freeINTEGER;

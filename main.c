@@ -15,7 +15,7 @@
 int Reals = 0;
 int Strings = 0;
 int Increasing = 1;
-int debugMAIN = 0;
+int debugMAIN = 1;
 char *filename;
 
 
@@ -28,6 +28,7 @@ int endCommand = 0;
 int
 main(int argc,char **argv)
 {
+    printf("Running\n");
 
     FILE *fp;
 
@@ -44,7 +45,6 @@ main(int argc,char **argv)
     else
     {
         filename = argv[argIndex];
-
 
         if(debugMAIN) {
             printf("Remaining arguments:\n");
