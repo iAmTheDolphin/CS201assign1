@@ -186,7 +186,7 @@ int sizeBST(BST *t) {
     return t->size;
 }
 
-BSTNODE *findBSThelper (BST *t, BSTNODE *n, void *value) {
+static BSTNODE *findBSThelper (BST *t, BSTNODE *n, void *value) {
     if(t->comparator(getBSTNODEvalue(n), value) == 0) {
         return n;
     }
@@ -346,7 +346,7 @@ static void displayHelper(BST *t, BSTNODE *n, FILE *fp) {
 
 void displayBST(BST *t,FILE *fp) {
     if(t->size == 0) {
-        printf("[empty]");
+        printf("[]");
     }
     else {
         displayHelper(t, t->root, fp);
@@ -415,6 +415,7 @@ void statisticsBST(BST *t,FILE *fp) {
     else {
         statsHelper(t->root, 0);
         printf("Minimum depth: %d\nMaximum depth: %d\n", min, max);
+        min = max = -1;
     }
 }
 

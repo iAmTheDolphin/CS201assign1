@@ -88,6 +88,7 @@ void displayHEAP(HEAP *h, FILE *fp) {
 }
 
 void displayHEAPdebug(HEAP *h, FILE *fp) {
+    printf("heap size: %d\nbst size: %d\n", h->size, sizeBST(h->tree));
     displayBSTdebug(h->tree, fp);
 }
 
@@ -103,7 +104,7 @@ void freeHEAP(HEAP *h) {
 }
 
 
-void swap(BSTNODE *n1, BSTNODE *n2) {
+static void swap(BSTNODE *n1, BSTNODE *n2) {
     void *data = getBSTNODEvalue(n1);
     setBSTNODEvalue(n1, getBSTNODEvalue(n2));
     setBSTNODEvalue(n2, data);
@@ -119,9 +120,9 @@ void swap(BSTNODE *n1, BSTNODE *n2) {
 
 /*        builder        */
 
-BSTNODE *getMaxChild(HEAP *h, BSTNODE *parent) {
+static BSTNODE *getMaxChild(HEAP *h, BSTNODE *parent) {
     if (getBSTNODEright(parent) &&
-        h->compare(getBSTNODEvalue(getBSTNODEleft(parent)), getBSTNODEvalue(getBSTNODEright(parent))) < 0) {
+        h->compare(getBSTNODEvalue(getBSTNODEleft(parent)), getBSTNODEvalue(getBSTNODEright(parent))) > 0) {
         // if the right is bigger
         return getBSTNODEright(parent);
     } else {
@@ -129,18 +130,20 @@ BSTNODE *getMaxChild(HEAP *h, BSTNODE *parent) {
     }
 }
 
-void heapify(HEAP *h, BSTNODE *n) {
+static void heapify(HEAP *h, BSTNODE *n) {
     //this needs to check down and bubble down
     //if it is a parent at all, it will have a left child
     if (debugHEAP) printf("heapify\n");
     if (getBSTNODEright(n)) {
         BSTNODE *maxChild = getMaxChild(h, n);
-        if (h->compare(getBSTNODEvalue(maxChild), getBSTNODEvalue(n)) > 0) {
+        if (h->compare(getBSTNODEvalue(maxChild), getBSTNODEvalue(n)) < 0) {
+            if(debugHEAP) printf ("swapping...\n");
             swap(n, maxChild);
             heapify(h, maxChild);
         }
     } else if (getBSTNODEleft(n)) {
-        if (h->compare(getBSTNODEvalue(getBSTNODEleft(n)), getBSTNODEvalue(n)) > 0) {
+        if (h->compare(getBSTNODEvalue(getBSTNODEleft(n)), getBSTNODEvalue(n)) < 0) {
+            if(debugHEAP) printf ("swapping...\n");
             swap(n, getBSTNODEleft(n));
             heapify(h, getBSTNODEleft(n));
         }
@@ -179,6 +182,8 @@ void *extractHEAP(HEAP *h) {
     //setBSTroot(h->tree, n);
     pruneLeafBST(h->tree, n);
     heapify(h, getBSTroot(h->tree));
+    freeBSTNODE(n, 0);
+    h->size--;
     return data;
 
 }

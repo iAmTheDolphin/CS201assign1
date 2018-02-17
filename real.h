@@ -8,7 +8,8 @@ typedef struct REAL REAL;
 extern REAL *newREAL(double);
 extern double getREAL(REAL *);
 extern double setREAL(REAL *,double);
-extern double compareREAL(void *,void *);
+extern int compareREALmax(void *,void *);
+extern int compareREALmin(void *,void *);
 extern void displayREAL(void *,FILE *);
 extern void freeREAL(void *);
 

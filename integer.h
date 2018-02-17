@@ -8,7 +8,8 @@ typedef struct INTEGER INTEGER;
 extern INTEGER *newINTEGER(int);
 extern int getINTEGER(INTEGER *);
 extern int setINTEGER(INTEGER *,int);
-extern int compareINTEGER(void *,void *);
+extern int compareINTEGERmax(void *,void *);
+extern int compareINTEGERmin(void *,void *);
 extern void displayINTEGER(void *,FILE *);
 extern void freeINTEGER(void *);
 

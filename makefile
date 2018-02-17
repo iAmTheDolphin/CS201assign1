@@ -1,14 +1,26 @@
-OBJS = bst.o main.o integer.o heap.o queue.o sll.o stack.o dll.o
+OBJS = bst.o heapsort.o integer.o heap.o queue.o sll.o stack.o dll.o real.o scanner.o string.o
 OOPTS = -Wall -Wextra -g -c
 LOPTS = -Wall -Wextra -g
 
-all : main
+all : heapsort
 
-main : $(OBJS)
-		gcc $(LOPTS) $(OBJS) -o main
+heapsort : $(OBJS)
+		gcc $(LOPTS) $(OBJS) -o heapsort
+
+string.o : string.c string.h
+		gcc $(OOPTS) string.c
+
+scanner.o : scanner.c scanner.h
+		gcc $(OOPTS) scanner.c
+
+real.o : real.c real.h
+		gcc $(OOPTS) real.c
 
 integer.o : integer.c integer.h
 		gcc $(OOPTS) integer.c
+
+sll.o : sll.c sll.h
+		gcc $(OOPTS) sll.c
 
 queue.o : queue.c queue.h sll.o
 		gcc $(OOPTS) queue.c
@@ -16,8 +28,8 @@ queue.o : queue.c queue.h sll.o
 bst.o : bst.c bst.h
 		gcc $(OOPTS) bst.c
 
-main.o :	main.c integer.h
-		gcc $(OOPTS) main.c
+heapsort.o :	heapsort.c integer.o real.o string.o heap.o scanner.o
+		gcc $(OOPTS) heapsort.c
 
 heap.o : heap.c heap.h queue.o stack.o
 		gcc $(OOPTS) heap.c
@@ -28,14 +40,14 @@ stack.o : stack.c stack.h dll.o
 dll.o : dll.c dll.h
 		gcc $(OOPTS) dll.c
 
-test : main
-		./main
+test : heapsort
+		./heapsort
 
-valgrind : main
-		valgrind ./main
+valgrind : heapsort
+		valgrind ./heapsort
 
 clean	:
-		rm -f -r $(OBJS) main *.dSYM
+		rm -f -r $(OBJS) heapsort *.dSYM
 
-memcheck : main
-		valgrind --leak-check=yes ./main
+memcheck : heapsort
+		valgrind --leak-check=yes ./heapsort

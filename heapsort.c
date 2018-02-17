@@ -22,6 +22,10 @@ char *filename;
 static int processOptions(int,char **);
 void Fatal(char *,...);
 
+int
+compareINTEGER2(void *v, void *w) {
+    return getINTEGER(w) - getINTEGER(v);
+}
 
 int endCommand = 0;
 

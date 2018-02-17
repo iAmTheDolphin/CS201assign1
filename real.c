@@ -34,12 +34,21 @@ setREAL(REAL *v, double x) {
 
 void
 displayREAL(void *v, FILE *fp) {
-    fprintf(fp, "%d", getREAL((REAL *) v));
+    fprintf(fp, "%f", getREAL((REAL *) v));
 }
 
-double
-compareREAL(void *v, void *w) {
-    return getREAL(v) - getREAL(w);
+int
+compareREALmax(void *v, void *w) {
+    if(getREAL(v) == getREAL(w)) return 0;
+    else if(getREAL(v) < getREAL(w)) return 1;
+    else return -1;
+}
+
+int
+compareREALmin(void *v, void *w) {
+    if(getREAL(v) == getREAL(w)) return 0;
+    else if(getREAL(v) > getREAL(w)) return 1;
+    else return -1;
 }
 
 void
