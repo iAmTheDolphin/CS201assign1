@@ -1,6 +1,7 @@
 OBJS = bst.o heapsort.o integer.o heap.o queue.o sll.o stack.o dll.o real.o scanner.o string.o
 OOPTS = -Wall -Wextra -g -c
 LOPTS = -Wall -Wextra -g
+EXEC = ./heapsort -r hs-0-0.data
 
 all : heapsort
 
@@ -41,13 +42,13 @@ dll.o : dll.c dll.h
 		gcc $(OOPTS) dll.c
 
 test : heapsort
-		./heapsort
+		$(EXEC)
 
 valgrind : heapsort
-		valgrind ./heapsort
+		valgrind $(EXEC)
 
 clean	:
 		rm -f -r $(OBJS) heapsort *.dSYM
 
 memcheck : heapsort
-		valgrind --leak-check=yes ./heapsort
+		valgrind --leak-check=yes $(EXEC)

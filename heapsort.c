@@ -66,7 +66,7 @@ main(int argc,char **argv)
 
     HEAP *h;
     void (*display)(void *, FILE *);
-    void (*free)(void *);
+    void (*specialfree)(void *);
 
     if(Reals) { //it is a file of reals
         if(debugMAIN) printf("Heaping Reals\n");
@@ -78,11 +78,11 @@ main(int argc,char **argv)
             insertHEAP(h, newREAL(temp));
             temp = readReal(fp);
         }
-        if(debugMAIN) printf("adding : %f\n", temp);
-        insertHEAP(h, newREAL(temp));
+//        if(debugMAIN) printf("adding : %f\n", temp);
+//        insertHEAP(h, newREAL(temp));
         buildHEAP(h);
         display = displayREAL;
-        free = freeREAL;
+        specialfree = freeREAL;
     }
     else if(Strings) { //it is a file of strings
         if(debugMAIN) printf("Heaping strings\n");
@@ -105,12 +105,12 @@ main(int argc,char **argv)
                 temp = readToken(fp);
             }
         }
-        if(debugMAIN) printf("adding : %s\n", temp);
-        insertHEAP(h, newSTRING(temp));
+//        if(debugMAIN) printf("adding : %s\n", temp);
+//        insertHEAP(h, newSTRING(temp));
         if(debugMAIN) printf("items loaded. building heap...\n");
         buildHEAP(h);
         display = displaySTRING;
-        free = freeSTRING;
+        specialfree = freeSTRING;
     }
     else { //it is an integer file
         if(debugMAIN) printf("no string or real options passed. Heaping Integers\n");
@@ -122,11 +122,11 @@ main(int argc,char **argv)
             insertHEAP(h, newINTEGER(temp));
             temp = readInt(fp);
         }
-        if(debugMAIN) printf("adding : %d\n", temp);
-        insertHEAP(h, newINTEGER(temp));
+//        if(debugMAIN) printf("adding : %d\n", temp);
+//        insertHEAP(h, newINTEGER(temp));
         buildHEAP(h);
         display = displayINTEGER;
-        free = freeINTEGER;
+        specialfree = freeINTEGER;
     }
 
 
@@ -140,7 +140,7 @@ main(int argc,char **argv)
         void *value = extractHEAP(h);
         display(value, stdout);
         if(sizeHEAP(h) != 0) printf(" ");
-        free(value);
+        specialfree(value);
     }
     printf("\n");
 
@@ -178,7 +178,12 @@ void explain () {
                    "My extractHeap takes O(log(n)) time because when you remove the root node of the\n"
                    "heap, the last inserted leaf takes its place and must then be heapified.\n"
                    "Heapify takes log(n) in the worst case because the value must trickle all the way\n"
-                   "down from the root to a leaf.\n");
+                   "down from the root to a leaf.\n"
+                   "\n"
+                   "Heapsorting the file takes O(n log(n)) time because inserting the values into the\n"
+                   "heap is linear, building the heap is linear, and running extract Min for every value\n"
+                   "runs in n log(n) because heapify(O(log(n))) must be called every time. Thus, my\n"
+                   "program runs in O(n + n + nlog(n)) time which is basically O(n log(n)) time.\n");
 }
 
 

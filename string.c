@@ -40,21 +40,16 @@ displaySTRING(void *v, FILE *fp) {
 
 int
 compareSTRINGmax(void *v, void *w) {
-    int x = strcmp(v, w);
-    if(x) {
-        return x > 0 ? -1 : 1;
-    }
-    else {
-        return 0;
-    }
+    return (strcmp(getSTRING(w), getSTRING(v)));
 }
 
 int
 compareSTRINGmin(void *v, void *w) {
-    return strcmp(v, w);
+    return strcmp(getSTRING(v), getSTRING(w));
 }
 
 void
 freeSTRING(void *v) {
-    free((STRING *) v);
+    free(getSTRING(v));
+    free(v);
 }
