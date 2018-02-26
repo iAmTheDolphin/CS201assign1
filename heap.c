@@ -179,7 +179,6 @@ void *extractHEAP(HEAP *h) {
     BSTNODE *root = getBSTroot(h->tree);
     void *data = getBSTNODEvalue(root);
     swap(n, root);
-    //setBSTroot(h->tree, n);
     pruneLeafBST(h->tree, n);
     heapify(h, getBSTroot(h->tree));
     freeBSTNODE(n, 0);
